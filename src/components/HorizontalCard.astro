@@ -1,19 +1,8 @@
 ---
-const { title, img, desc, url, badges, tags, target = "_blank" } = Astro.props;
+const { title, img, desc, url, tags, target = "_blank" } = Astro.props;
 
 import { Image } from "astro:assets";
-
-const badgeColors = {
-  "Spigot 1.8.8": "#EF9127",
-  "Paper 1.21.5": "#2B7FFF",
-  "Neoforge": "#A94E0D",
-  "Fabric": "#BCB29C",
-  "Modern": "#2da72d",
-  "Java": "#f89820",
-  "Kotlin": "#7F52FF",
-};
-
-const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
+import { badgeColors } from "../data/badgeColors";
 ---
 
 <div
@@ -38,29 +27,18 @@ const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
         <h1 class="text-xl font-bold">
           {title}
           {
-            badges?.map((badge) => (
+            tags?.map((tag) => (
                 <div
                     class="badge mx-1"
-                    style={`background-color: ${badgeColors[badge] ?? "#6b7280"}; color: white;`}
+                    style={`background-color: ${badgeColors[tag] ?? "#6b7280"}; color: white;`}
                 >
-                  {badge}
+                  {tag}
                 </div>
             ))
           }
         </h1>
 
         <p class="py-1 text-1xl">{desc}</p>
-
-        <div class="card-actions justify-end">
-          {
-              tags &&
-              tags.map((tag) => (
-                  <a href={`${tag_url}/${tag}`} class="badge badge-outline">
-                    {tag}
-                  </a>
-              ))
-          }
-        </div>
       </div>
     </div>
   </a>

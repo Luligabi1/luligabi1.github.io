@@ -1,0 +1,26 @@
+---
+import { getEntry } from "astro:content";
+import HorizontalCard from "./HorizontalCard.astro";
+import createSlug from "../lib/createSlug";
+
+interface Props {
+  slug: string;
+  target?: string;
+}
+
+const { slug, target = "_self" } = Astro.props;
+const post = await getEntry("blog", slug);
+
+if (!post) {
+  throw new Error(`BlogPostCard: no blog post found with slug "${slug}"`);
+}
+---
+
+<HorizontalCard
+  title={post.data.title}
+  img={post.data.heroImage}
+  desc={post.data.description}
+  url={"/blog/" + createSlug(post.data.title, post.slug)}
+  target={target}
+  tags={post.data.tags}
+/>

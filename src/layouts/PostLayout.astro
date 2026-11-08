@@ -3,27 +3,38 @@ import { type BlogSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import { badgeColors } from "../data/badgeColors";
+import { getCollection } from "astro:content";
+import BlogPostCard from "../components/BlogPostCard.astro";
 
 export interface Props extends BlogSchema {}
 
-const { title, description, pubDate, updatedDate, heroImage, badge, tags = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags = [] } = Astro.props;
 dayjs.extend(localizedFormat);
 const displayDate = dayjs(pubDate).format("ll")
 import { Image } from "astro:assets";
+
+const relatedPosts = (await getCollection("blog"))
+  .filter((post) => post.data.title !== title && post.data.tags?.some((tag) => tags.includes(tag)))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}, ogType="article">
   <main class="md:flex md:justify-center">
-    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+    <article class="prose prose-lg prose-invert max-w-[750px] prose-img:mx-auto">
       {heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}
       <h1 class="title my-2 text-4xl font-bold">{title}</h1>
       {pubDate && <time>{displayDate}</time>}
       <br />
-      {badge && <div class="badge badge-secondary my-1">{badge}</div>}
       {
         tags &&
           tags.map((tag) => (
-            <a href={`/blog/tag/${tag}`} class="badge badge-outline ml-2 no-underline">
+            <a
+              href={`/blog/tag/${tag}`}
+              class={badgeColors[tag] ? "badge ml-2 no-underline" : "badge badge-outline ml-2 no-underline"}
+              style={badgeColors[tag] ? `background-color: ${badgeColors[tag]}; border-color: ${badgeColors[tag]}; color: white;` : undefined}
+            >
               {tag}
             </a>
           ))
@@ -38,6 +49,26 @@ import { Image } from "astro:assets";
       }
       <div class="divider my-2"></div>
       <slot />
+      {
+        relatedPosts.length > 0 && (
+          <section>
+            <div class="divider my-2"></div>
+            <h2>Related posts</h2>
+            <div class="flex flex-col gap-4">
+              {relatedPosts.map((post) => (
+                <BlogPostCard slug={post.slug} />
+              ))}
+            </div>
+          </section>
+        )
+      }
     </article>
   </main>
+  <script>
+    if (document.querySelector("pre.mermaid")) {
+      const { default: mermaid } = await import("mermaid");
+      mermaid.initialize({ startOnLoad: false, theme: "dark" });
+      await mermaid.run({ querySelector: "pre.mermaid" });
+    }
+  </script>
 </BaseLayout>

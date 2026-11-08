@@ -1,9 +1,12 @@
 ---
-const { title, img, desc, badges, tags, github, curseforge, modrinth, target = "_blank" } = Astro.props;
-
 import { Image } from "astro:assets";
 import { marked } from 'marked';
+import { mods } from "../data/mods";
 
+const { mod: modId, tags, target = "_blank" } = Astro.props;
+const mod = mods[modId];
+if (!mod) throw new Error(`Unknown mod id: ${modId}`);
+const { title, img, desc, badges, github, curseforge, modrinth } = mod;
 
 const descHtml = marked.parse(desc);
 

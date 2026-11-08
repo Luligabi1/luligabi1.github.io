@@ -1,25 +1,90 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ImageGallery from "../components/ImageGallery.astro";
+import HorizontalCard from "../components/HorizontalCard.astro";
+import BlogPostCard from "../components/BlogPostCard.astro";
+import { getCollection } from "astro:content";
+import createSlug from "../lib/createSlug";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => post.data.tags?.includes("Sabotador"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout title = "Sabotador.com" sideBarActiveItemID="sabotador">
 
+  <div class="prose prose-lg prose-invert max-w-none">
+
   <img src="/sabotador/header.svg" alt="Sabotador Header" ... />
 
+  <div class="mt-5">
+    <ImageGallery folder="sabotador/intro" alt="Sabotador gameplay" />
+  </div>
+
   <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">What is Sabotage?</div>
+    <div class="text-3xl w-full font-bold mb-5 mt-10">What is Sabotador.com?</div>
   </div>
 
   <div class="pb-4 mt-5">
     <div class="py-2">
       <p class="text-lg text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
+        Sabotador.com is a community-driven non-profit Minecraft server built around the classic <a href="https://mcpvpminecraftpvp.fandom.com/wiki/Sabotage" target="_blank" rel="noopener noreferrer">Sabotage</a> minigame.
+        Built by and for members of the now-closed GameMods server, it strives to keep the minigame's core while
+        also shaking things up with great adjustments to mechanics, overall balance and game modifiers!
+      </p>
+      <p class="text-lg text-justify mt-3">
+        Whether you're a veteran who remembers the original or a newcomer looking for a quick match, Sabotador.com offers regular updates, seasonal events and game modifiers to keep every round feeling different.
       </p>
     </div>
+
+    <img src="/sabotador/explosions.gif" alt="Explosions" ... />
+
+    <div class="aspect-video w-full mt-4">
+      <iframe
+        class="w-full h-full rounded-lg"
+        src="https://www.youtube.com/embed/AaC3p_cCHoU"
+        title="Sabotador trailer"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
   </div>
+
+    <div>
+      <div class="text-3xl w-full font-bold mb-5 mt-10">Overall balance changes</div>
+    </div>
+
+    <div class="pb-4 mt-5">
+      <div class="py-2">
+        <p class="text-lg text-justify">
+          During its first months of operation, a couple of experimental changes were tested and (mostly) implemented into the real game.
+          I learned much while designing and adjusting these as feedback and data was collected from them. Check out the blogposts for
+          a deep dive into the thought process behind them!
+        </p>
+        <div class="not-prose mt-3">
+          <BlogPostCard slug="sabotage/corpse_reports" />
+          <BlogPostCard slug="sabotage/gratitude" />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="text-3xl w-full font-bold mb-5 mt-10">The modern test</div>
+    </div>
+
+    <div class="pb-4 mt-5">
+      <div class="py-2">
+        <p class="text-lg text-justify">
+          On April 2025, the largest test on the server's history was realized: A full port to the then-latest version,
+          1.21.5. It was one last hurrah for the server before it went on a hiatus. I've written a blogpost detailing
+          the process of porting, the successes and the failures of the test.
+        </p>
+        <div class="not-prose mt-3">
+          <BlogPostCard slug="sabotage/modern_test" />
+        </div>
+      </div>
+    </div>
 
   <div>
     <div class="text-3xl w-full font-bold mb-5 mt-10">Game Modifiers</div>
@@ -28,18 +93,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <div class="pb-4 mt-5">
     <div class="py-2">
       <p class="text-lg text-justify">
-        Game Modifiers freshen up matches by introducing gameplay changes not present in regular playing.
+        On January 2026, the server regained traction and I cooked up a very long forgotten idea: Game Modifiers!
+        They freshen up matches by introducing gameplay changes not present in regular playing.
+        Each modifier tweaks the rules of a match in a different way, so no two rounds play out quite the same.
       </p>
     </div>
   </div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Seasonal events</div>
+    <div class="text-2xl w-full font-bold mb-5 mt-10">Seasonal events</div>
   </div>
 
   <div class="pb-4 mt-5">
     <div class="py-2">
       <p class="text-lg text-justify">
+        Throughout the year, limited-time events bring themed changes to the server for holidays and special occasions.
         Seasonal events are also available off-season as game modifiers.
       </p>
     </div>
@@ -52,9 +120,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <div class="pb-4 mt-5">
     <div class="py-2">
       <p class="text-lg text-justify">
-        After returning to the lobby, there's a 20% chance a vote to activate a random modifier will begin;
+        After returning to the lobby, there's a 20% chance a vote to activate a random modifier will begin.
+        Players decide together whether the modifier is applied to the next match.
       </p>
     </div>
+  </div>
+
+  <div>
+    <div class="text-3xl w-full font-bold mb-5 mt-10">Latest from blog</div>
+  </div>
+
+  {
+    posts.map((post) => (
+      <>
+        <HorizontalCard
+          title={post.data.title}
+          img={post.data.heroImage}
+          desc={post.data.description}
+          url={"/blog/" + createSlug(post.data.title, post.slug)}
+          target="_self"
+          tags={post.data.tags}
+        />
+        <div class="divider my-0" />
+      </>
+    ))
+  }
+
   </div>
 
 </BaseLayout>

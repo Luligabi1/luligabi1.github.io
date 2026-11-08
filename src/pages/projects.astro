@@ -14,106 +14,27 @@ import ModCard from "../components/ModCard.astro";
     img="/sabotador/icon.svg"
     desc="Sabotador.com is a Minecraft Server reviving the classic Sabotage minigame for the Brazilian and Portuguese communities. Features multiple balance changes, seasonal events, game modifiers and more!"
     url="sabotador"
-    badges={["Spigot 1.8.8", "Paper 1.21.5", "Kotlin", "Java"]}
+    tags={["Spigot 1.8.8", "Paper 1.21.5", "Kotlin", "Java"]}
   />
 
   <div>
     <div id="minecraft" class="text-3xl w-full font-bold mb-5 mt-10 scroll-mt-10">Minecraft Mods</div>
   </div>
 
-  <ModCard
-      title="Hostile Neural Industrialization"
-      img="/mod_icons/hostile_neural_industrialization.webp"
-      desc="Hostile Neural Networks meets Modern Industrialization — Upgrade your Neural Network with integrated machines and multiblocks!"
-      badges={["Neoforge", "Modern", "Kotlin"]}
-      github="https://github.com/Luligabi1/HostileNeuralIndustrialization/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/hostile-neural-industrialization"
-      modrinth="https://modrinth.com/mod/hostile-neural-industrialization"
-  />
-  <ModCard
-      title="Enhanced Workbenches"
-      img="/mod_icons/enhanced_workbenches.webp"
-      desc="Bring the classic Red Power 2 Project Table into Modern Minecraft!"
-      badges={["Neoforge", "Fabric", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/EnhancedWorkbenches/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/enhanced-workbenches"
-      modrinth="https://modrinth.com/mod/enhanced-workbenches"
-  />
-  <ModCard
-      title="AMIMI (Advanced Multiblock Info for Modern Industrialization)"
-      img="/mod_icons/amimi.webp"
-      desc="Improves on Modern Industrialization's Multiblock Information tab by adding a 3D preview of the multiblock directly onto your recipe viewer of choice"
-      badges={["Neoforge", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/AMIMI/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/amimi"
-      modrinth="https://modrinth.com/mod/amimi"
-  />
-  <ModCard
-      title="FuelInfo"
-      img="/mod_icons/fuelinfo.webp"
-      desc="Client-side QoL mod that informs you how many items you can smelt/brew and how long it will take in Furnaces and Brewing Stands"
-      badges={["Neoforge", "Fabric", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/FuelInfo/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/fuel-info"
-      modrinth="https://modrinth.com/mod/fuel-info"
-  />
-  <ModCard
-      title="Incantationem"
-      img="/mod_icons/incantationem.webp"
-      desc="Vanilla+ mod adding new enchantments and curses into the game!"
-      badges={["Neoforge", "Fabric", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/Incantationem/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/incantationem"
-      modrinth="https://modrinth.com/mod/incantationem"
-  />
-  <ModCard
-      title="Yet Another Industrialization!"
-      img="/mod_icons/yet_another_industrialization.webp"
-      desc="An addon for Modern Industrialization that adds miscellaneous machines, items and more!"
-      badges={["Neoforge", "Modern", "Kotlin"]}
-      github="https://github.com/Luligabi1/YetAnotherIndustrialization/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/yet-another-industrialization"
-      modrinth="https://modrinth.com/mod/yet-another-industrialization"
-  />
-  <ModCard
-      title="Coxinha Utilities"
-      img="/mod_icons/coxinha_utilities.webp"
-      desc="A standalone utility mod adding random and ~~mostly~~ always unoriginal things."
-      badges={["Neoforge", "Fabric", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/CoxinhaUtilities/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/coxinha-utilities"
-      modrinth="https://modrinth.com/mod/coxinha-utilities"
-  />
-  <ModCard
-      title="Deep Mob Learning: Refabricated"
-      img="/mod_icons/deep_mob_learning_refabricated.webp"
-      desc="A rework of the original [Deep Mob Learning](https://www.curseforge.com/minecraft/mc-mods/deep-mob-learning) mod for modern versions of Minecraft. Provides an alternative way of acquiring mob loot through intense duels with the Matrix Glitches."
-      badges={["Fabric", "Modern", "Kotlin"]}
-      github="https://github.com/CafeteriaGuild/DeepMobLearning-Refabricated/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/deep-mob-learning-refabricated"
-      modrinth="https://modrinth.com/mod/deep-mob-learning-refabricated"
-  />
-  <ModCard
-      title="Logicates"
-      img="/mod_icons/logicates.webp"
-      desc="Logicates are special redstone components of diverse nature, including Logic Gates, sensors and other useful gadgets for your redstone circuits."
-      badges={["Fabric", "Modern", "Java"]}
-      github="https://github.com/Luligabi1/Logicates/"
-      curseforge="https://www.curseforge.com/minecraft/mc-mods/logicates"
-      modrinth="https://modrinth.com/mod/logicates"
-  />
+  <ModCard mod="hostileNeuralIndustrialization" />
+  <ModCard mod="enhancedWorkbenches" />
+  <ModCard mod="amimi" />
+  <ModCard mod="fuelInfo" />
+  <ModCard mod="incantationem" />
+  <ModCard mod="yetAnotherIndustrialization" />
+  <ModCard mod="coxinhaUtilities" />
+  <ModCard mod="deepMobLearningRefabricated" />
+  <ModCard mod="logicates" />
 
   <div>
     <div id="hytale" class="text-3xl w-full font-bold mb-5 mt-10 scroll-mt-10">Hytale Mods</div>
   </div>
 
-  <ModCard
-      title="Barely Baskets"
-      img="/mod_icons/barely_baskets.webp"
-      desc="Adds Baskets into the game. Baskets can act as early game portable storage and hoppers, catching anything thrown on top of them!"
-      badges={["Java"]}
-      github="https://github.com/Luligabi1/Barely-Baskets"
-      curseforge="https://www.curseforge.com/hytale/mods/barely-baskets"
-  />
+  <ModCard mod="barelyBaskets" />
 
 </BaseLayout>

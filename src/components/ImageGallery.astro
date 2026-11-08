@@ -1,0 +1,177 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  folder: string;
+  interval?: number;
+  alt?: string;
+}
+
+const { folder, interval = 4000, alt = "Gallery image" } = Astro.props;
+
+const cleanFolder = folder.replace(/^\/+|\/+$/g, "");
+const dir = path.join(process.cwd(), "public", cleanFolder);
+const images = fs.existsSync(dir)
+  ? fs
+      .readdirSync(dir)
+      .filter((f) => /\.(avif|gif|jpe?g|png|webp|svg)$/i.test(f))
+      .sort()
+      .map((f) => `/${cleanFolder}/${f}`)
+  : [];
+---
+
+{
+  images.length > 0 && (
+    <div class="gallery-root not-prose" data-interval={interval}>
+      <div class="image-gallery">
+        {images.map((src, i) => (
+          <img
+            src={src}
+            alt={`${alt} ${i + 1}`}
+            loading={i === 0 ? "eager" : "lazy"}
+            class:list={["gallery-slide", { active: i === 0 }]}
+          />
+        ))}
+      </div>
+      {images.length > 1 && (
+        <div class="gallery-thumbs">
+          {images.map((src, i) => (
+            <button
+              type="button"
+              class:list={["gallery-thumb", { active: i === 0 }]}
+              aria-label={`Show ${alt} ${i + 1}`}
+              aria-pressed="false"
+            >
+              <img src={src} alt="" loading="lazy" />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .image-gallery {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+  .gallery-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .gallery-slide.active {
+    opacity: 1;
+  }
+  .gallery-thumbs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .gallery-root:hover .gallery-thumbs,
+  .gallery-root:focus-within .gallery-thumbs {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @media (hover: none) {
+    .gallery-thumbs {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+  .gallery-thumb {
+    flex: 0 0 auto;
+    width: 6rem;
+    aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.6;
+    background: none;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  .gallery-thumb:hover {
+    opacity: 1;
+  }
+  .gallery-thumb.active {
+    opacity: 1;
+  }
+  .gallery-thumb.locked {
+    border-color: currentColor;
+  }
+  .gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".gallery-root").forEach((gallery) => {
+    const slides = gallery.querySelectorAll<HTMLImageElement>(".gallery-slide");
+    const frame = gallery.querySelector<HTMLElement>(".image-gallery");
+    const first = slides[0];
+    const applyRatio = () => {
+      if (frame && first.naturalWidth && first.naturalHeight) {
+        frame.style.aspectRatio = `${first.naturalWidth} / ${first.naturalHeight}`;
+      }
+    };
+    if (first.complete) applyRatio();
+    else first.addEventListener("load", applyRatio, { once: true });
+    const thumbs = gallery.querySelectorAll<HTMLButtonElement>(".gallery-thumb");
+    if (slides.length < 2) return;
+    const interval = Number(gallery.dataset.interval) || 4000;
+    let current = 0;
+    let locked = false;
+
+    const show = (index: number) => {
+      slides[current].classList.remove("active");
+      thumbs[current]?.classList.remove("active");
+      current = index;
+      slides[current].classList.add("active");
+      thumbs[current]?.classList.add("active");
+    };
+
+    const setLock = (value: boolean) => {
+      locked = value;
+      thumbs.forEach((t, i) => {
+        const isLocked = locked && i === current;
+        t.classList.toggle("locked", isLocked);
+        t.setAttribute("aria-pressed", String(isLocked));
+      });
+    };
+
+    setInterval(() => {
+      if (locked) return;
+      show((current + 1) % slides.length);
+    }, interval);
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener("click", () => {
+        if (locked && i === current) {
+          setLock(false);
+          return;
+        }
+        show(i);
+        setLock(true);
+      });
+    });
+  });
+</script>
